@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model planet {
+  id         Int     @id @default(autoincrement())
+  name       String  @unique(map: "Planet_name_key") @db.VarChar(100)
+  climate    String  @db.VarChar(100)
+  terrain    String  @db.VarChar(200)
+  population BigInt?
+}
