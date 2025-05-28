@@ -8,6 +8,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model user {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique(map: "User_name_key") @db.VarChar(100)
+  email     String   @unique(map: "User_email_key") @db.VarChar(100)
+  password  String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+}
+
 model planet {
   id         Int     @id @default(autoincrement())
   name       String  @unique(map: "Planet_name_key") @db.VarChar(100)
