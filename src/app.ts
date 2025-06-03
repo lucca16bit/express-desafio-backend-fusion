@@ -1,5 +1,6 @@
+import router from '@routes/router';
 import cors from 'cors';
-import express, { NextFunction, Request, Response } from 'express';
+import express from 'express';
 import morgan from 'morgan';
 
 const app = express();
@@ -16,14 +17,6 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-// tratamento global
-app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
-    res.status(500).send(error.message);
-});
-
-// teste 
-app.use((req: Request, res: Response, next: NextFunction) => {
-    res.send("Hello World");
-})
+app.use(router);
 
 export default app;

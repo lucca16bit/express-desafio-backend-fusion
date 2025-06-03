@@ -4,6 +4,17 @@
     "module": "commonjs",
     "outDir": "./dist",
     "rootDir": "./src",
+    "baseUrl" : "./src",
+    "paths" : { 
+      "@config/*" : [ "config/*" ], 
+      "@middlewares/*" : [ "middlewares/*" ], 
+      "@controllers/*" : [ "controllers/*" ],
+      "@interfaces/*" : ["interfaces/*"],
+      "@repositories/*" : ["repositories/*"],
+      "@services/*" : [ "services/*" ], 
+      "@routes/*" : [ "routes/*" ], 
+      "@utils/*" : [ "utils/*" ] 
+    },
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
