@@ -7,18 +7,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum affiliation {
+  NEUTRAL
+  JEDI_ORDER
+  SITH_ORDER
+  REBEL_ALLIANCE
+  CIS
+  GALACTIC_REPUBLIC
+  GALACTIC_EMPIRE
+  NEW_REPUBLIC
+  FIRST_ORDER
+  RESISTANCE
+}
+
 model user {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique(map: "User_name_key") @db.VarChar(100)
-  email     String   @unique(map: "User_email_key") @db.VarChar(100)
-  password  String   @db.VarChar(255)
-  createdAt DateTime @default(now())
+  id          Int         @id @default(autoincrement())
+  name        String      @unique(map: "User_name_key") @db.VarChar(100)
+  email       String      @unique(map: "User_email_key") @db.VarChar(100)
+  password    String      @db.VarChar(255)
+  affiliation affiliation @default(NEUTRAL)
+  createdAt   DateTime    @default(now())
 }
 
 model planet {
-  id         Int     @id @default(autoincrement())
-  name       String  @unique(map: "Planet_name_key") @db.VarChar(100)
-  climate    String  @db.VarChar(100)
-  terrain    String  @db.VarChar(200)
-  population BigInt?
+  id          Int         @id @default(autoincrement())
+  name        String      @unique(map: "Planet_name_key") @db.VarChar(100)
+  climate     String      @db.VarChar(100)
+  terrain     String      @db.VarChar(200)
+  population  BigInt?
 }

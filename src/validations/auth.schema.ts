@@ -1,3 +1,4 @@
+import { Affiliation } from '@interfaces/affiliation.interface';
 import { z } from 'zod';
 
 const nameValidation = z.string()
@@ -22,6 +23,10 @@ const passwordValidation = z.string()
 const register = z.object({
     name: nameValidation,
     email: z.string().email('Formato de e-mail inválido'),
+    affiliation: z.nativeEnum(Affiliation, {
+        required_error: 'A afiliação é necessária',
+        invalid_type_error: 'Afiliação inválido'
+    }),
     password: passwordValidation,
     confirm_password: z.string().min(1, 'Confirmação de senha necessário'),
 }).refine((data) => data.password === data.confirm_password, {

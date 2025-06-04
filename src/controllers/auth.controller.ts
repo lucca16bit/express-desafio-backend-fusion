@@ -1,4 +1,5 @@
 import config from '@config/config';
+import { IAffiliation } from '@interfaces/affiliation.interface';
 import Send from '@utils/response.utils';
 import bcrypt from 'bcryptjs';
 import { prisma } from 'db';
@@ -9,7 +10,7 @@ import { z } from 'zod';
 
 class AuthController {
     static register = async (req: Request, res: Response) => {
-        const {name, email, password, confirm_password} = req.body as z.infer<typeof authSchema.register>;
+        const {name, email, affiliation, password, confirm_password} = req.body as z.infer<typeof authSchema.register> & IAffiliation;
         
         try {
             const emailExists = await prisma.user.findUnique({
@@ -26,6 +27,7 @@ class AuthController {
                 data: {
                     name,
                     email,
+                    affiliation,
                     password: hashedPassword
                 }
             });
