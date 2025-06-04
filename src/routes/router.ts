@@ -1,13 +1,11 @@
-import AuthController from '@controllers/auth.controller';
-import express, { Router } from 'express';
+import { Router } from 'express';
+
+import authRouter from './auth.routes';
+import userRouter from './user.routes';
 
 const router = Router();
 
-router.get('/', (_, res) => {
-    return res.send("Hello World");
-});
-
-router.post('/register', AuthController.register);
-router.post('/login', AuthController.login);
+router.use('/auth', authRouter);
+router.use('/user', userRouter);
 
 export default router;
