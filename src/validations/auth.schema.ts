@@ -15,10 +15,10 @@ const nameValidation = z.string()
 const passwordValidation = z.string()
     .min(8, 'A senha deve conter pelo menos 8 caracteres')
     .max(100, 'A senha não pode ultrapassar de 100 caracteres')
-    .regex(/[AZ]/, 'A senha deve incluir pelo menos uma letra maiúscula') 
-    .regex(/[az]/, 'A senha deve incluir pelo menos uma letra minúscula') 
+    .regex(/[A-Z]/, 'A senha deve incluir pelo menos uma letra maiúscula') 
+    .regex(/[a-z]/, 'A senha deve incluir pelo menos uma letra minúscula') 
     .regex(/[0-9]/, 'A senha deve incluir pelo menos um número') 
-    .regex(/[@$!%*?&]/, 'A senha deve incluir pelo menos um caractere especial'); 
+    .regex(/[@$!%*?&]/, 'A senha deve incluir pelo menos um caractere especial');
 
 const register = z.object({
     name: nameValidation,

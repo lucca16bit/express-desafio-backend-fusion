@@ -75,9 +75,7 @@ class UserController {
                 where: { id: userId }
             });
 
-            return Send.success(res, {
-                message: 'Usuário deletado com sucesso'
-            });
+            return Send.success(res, null, 'Usuário deletado com sucesso');
         } catch (error) {
             console.error('Erro ao deletar o usuário: ', error);
             return Send.error(res, null, 'Erro ao deletar o usuário');

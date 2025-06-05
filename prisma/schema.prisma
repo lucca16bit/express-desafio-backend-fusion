@@ -27,6 +27,7 @@ model user {
   password    String      @db.VarChar(255)
   affiliation affiliation @default(NEUTRAL)
   createdAt   DateTime    @default(now())
+  planets     planet[]
 }
 
 model planet {
@@ -35,4 +36,6 @@ model planet {
   climate     String      @db.VarChar(100)
   terrain     String      @db.VarChar(200)
   population  BigInt?
+  user        user        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
 }
