@@ -3,5 +3,7 @@ export interface IPlanet {
     name: string;
     climate: string;
     terrain: string;
-    population?: bigint;
+    population?: bigint | null;
+    systemId: number;
+    userId: number;
 };

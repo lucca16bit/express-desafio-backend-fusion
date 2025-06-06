@@ -1,14 +1,11 @@
+import { AuthenticatedRequest } from '@interfaces/auth.request.interface';
 import Send from '@utils/response.utils';
 import { prisma } from 'db';
 import { Request, Response } from 'express';
 
-interface AuthenticatedRequest extends Request {
-    userId: number;
-}
-
 class PlanetController {
     static create = async (req: Request, res: Response) => {
-        const {name, climate, terrain, population } = req.body;
+        const {name, climate, terrain, population, systemId} = req.body;
 
         try {
             const userId = (req as AuthenticatedRequest).userId;
@@ -19,6 +16,11 @@ class PlanetController {
                     userId
                 }
             });
+
+            if (!systemId) {
+                return Send.error(res, null, 'É necessário informar um sistema estelar');
+            }
+
             if (planetExists) {
                 return Send.error(res, null, 'O planeta já existe!');
             };
@@ -29,6 +31,7 @@ class PlanetController {
                     climate,
                     terrain,
                     population: population ? BigInt(population) : null,
+                    systemId,
                     userId
                 },
                 select: {
@@ -42,6 +45,13 @@ class PlanetController {
                             id: true,
                             name: true,
                             affiliation: true
+                        }
+                    },
+                    starSystem: {
+                        select: {
+                            id: true,
+                            name: true,
+                            description: true
                         }
                     }
                 }
@@ -68,7 +78,14 @@ class PlanetController {
                     name: true,
                     climate: true,
                     terrain: true,
-                    population: true
+                    population: true,
+                    starSystem: {
+                        select: {
+                            id: true,
+                            name: true,
+                            description: true
+                        }
+                    }
                 }
             });
 
@@ -103,7 +120,14 @@ class PlanetController {
                     name: true,
                     climate: true,
                     terrain: true,
-                    population: true
+                    population: true,
+                    starSystem: {
+                        select: {
+                            id: true,
+                            name: true,
+                            description: true
+                        }
+                    }
                 }
             });
 
@@ -124,7 +148,7 @@ class PlanetController {
     };
 
     static update = async (req: Request, res: Response) => {
-        const {name, climate, terrain, population } = req.body;
+        const {name, climate, terrain, population, systemId} = req.body;
         
         try {
             const planetId = Number(req.params.id);
@@ -137,14 +161,22 @@ class PlanetController {
                     name,
                     climate,
                     terrain,
-                    population
+                    population,
+                    systemId
                 },
                 select: {
                     id: true,
                     name: true,
                     climate: true,
                     terrain: true,
-                    population: true
+                    population: true,
+                    starSystem: {
+                        select: {
+                            id: true,
+                            name: true,
+                            description: true
+                        }
+                    }
                 }
             });
 

@@ -1,10 +1,7 @@
+import { AuthenticatedRequest } from '@interfaces/auth.request.interface';
 import Send from '@utils/response.utils';
 import { prisma } from 'db';
 import { Request, Response } from 'express';
-
-interface AuthenticatedRequest extends Request {
-    userId: number;
-}
 
 class UserController {
     static view = async (req: Request, res: Response) => {

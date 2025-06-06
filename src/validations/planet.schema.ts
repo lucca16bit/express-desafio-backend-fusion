@@ -20,7 +20,7 @@ const populationValidation = z.union([
     z.null()
 ]).optional();
 
-const create = z.object({
+const validateSchema = z.object({
     name: nameValidation,
     climate: climateValidation,
     terrain: terrainValidation,
@@ -28,7 +28,7 @@ const create = z.object({
 });
 
 const planetSchema = {
-    create
+    validateSchema
 };
 
 export default planetSchema;

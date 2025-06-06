@@ -28,6 +28,7 @@ model user {
   affiliation affiliation @default(NEUTRAL)
   createdAt   DateTime    @default(now())
   planets     planet[]
+  starSystems starSystem[]
 }
 
 model planet {
@@ -36,6 +37,17 @@ model planet {
   climate     String      @db.VarChar(100)
   terrain     String      @db.VarChar(200)
   population  BigInt?
-  user        user        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  systemId    Int
   userId      Int
+  starSystem  starSystem  @relation(fields: [systemId], references: [id], onDelete: Cascade)
+  user        user        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model starSystem {
+  id          Int         @id @default(autoincrement())
+  name        String      @unique(map: "Star_system_name_key") @db.VarChar(100)
+  description String      @db.Text
+  planets     planet[]
+  userId      Int
+  user        user        @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
