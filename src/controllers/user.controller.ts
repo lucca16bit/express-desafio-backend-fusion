@@ -1,7 +1,10 @@
+import { IAffiliation } from '@interfaces/affiliation.interface';
 import { AuthenticatedRequest } from '@interfaces/auth.request.interface';
 import Send from '@utils/response.utils';
 import { prisma } from 'db';
 import { Request, Response } from 'express';
+import authSchema from 'validations/auth.schema';
+import z from 'zod';
 
 class UserController {
     static view = async (req: Request, res: Response) => {
@@ -33,9 +36,10 @@ class UserController {
     };
 
     static update = async (req: Request, res: Response) => {
+            const { name, email, affiliation } = req.body as z.infer<typeof authSchema.register> & IAffiliation;
+
         try {
             const userId = (req as AuthenticatedRequest).userId;
-            const { name, email, affiliation } = req.body;
 
             const updatedUser = await prisma.user.update({
                 where: {
@@ -47,6 +51,7 @@ class UserController {
                     affiliation
                 },
                 select: {
+                    id: true,
                     name: true,
                     email: true,
                     affiliation: true,
@@ -67,6 +72,16 @@ class UserController {
     static delete = async (req: Request, res: Response) => {
         try {
             const userId = (req as AuthenticatedRequest).userId;
+            
+            const userExists = await prisma.user.findFirst({
+                where: {
+                    id: userId
+                }
+            });
+
+            if (!userExists) {
+                return Send.notFound(res, null, 'Usuário não encontrado');
+            }
 
             await prisma.user.delete({
                 where: { id: userId }

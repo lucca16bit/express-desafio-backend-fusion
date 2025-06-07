@@ -2,10 +2,12 @@ import { AuthenticatedRequest } from '@interfaces/auth.request.interface';
 import Send from '@utils/response.utils';
 import { prisma } from 'db';
 import { Request, Response } from 'express';
+import systemSchema from 'validations/system.schema';
+import z from 'zod';
 
 class StarSystemController {
     static create = async (req: Request, res: Response) => {
-        const {name, description} = req.body;
+        const {name, description} = req.body as z.infer<typeof systemSchema.validateSchema>;
         try {
             const userId = (req as AuthenticatedRequest).userId;
 
@@ -129,7 +131,7 @@ class StarSystemController {
     };
 
     static update = async (req: Request, res: Response) => {
-        const {name, description} = req.body;
+        const {name, description} = req.body as z.infer<typeof systemSchema.validateSchema>;
 
         try {
             const systemId = Number(req.params.id);
@@ -180,16 +182,22 @@ class StarSystemController {
     static delete = async (req: Request, res: Response) => {
         try {
             const systemId = Number(req.params.id);
+
+            const systemExists = await prisma.starSystem.findFirst({
+                where: {
+                    id: systemId
+                }
+            });
+
+            if (!systemExists) {
+                return Send.error(res, null, 'Nenhum sistema estelar foi encontrado.');
+            };
             
             const system = await prisma.starSystem.delete({
                 where: {
                     id: systemId
                 }
             });
-
-            if (!system) {
-                return Send.notFound(res, null, 'Nenhum sistema estelar foi encontrado');
-            };
 
             return Send.success(res, null, 'Sistema estelar deletado com sucesso');
         } catch (error) {

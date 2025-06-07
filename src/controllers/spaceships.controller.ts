@@ -33,6 +33,7 @@ class SpaceShipsController {
                     userId
                 },
                 select: {
+                    id: true,
                     name: true,
                     model: true,
                     manufacturer: true,
@@ -94,6 +95,7 @@ class SpaceShipsController {
                     id: spaceShipId
                 },
                 select: {
+                    id: true,
                     name: true,
                     model: true,
                     manufacturer: true,
@@ -147,6 +149,7 @@ class SpaceShipsController {
                     passengerCapacity
                 },
                 select: {
+                    id: true,
                     name: true,
                     model: true,
                     manufacturer: true,

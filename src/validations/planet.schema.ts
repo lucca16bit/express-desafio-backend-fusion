@@ -24,7 +24,8 @@ const validateSchema = z.object({
     name: nameValidation,
     climate: climateValidation,
     terrain: terrainValidation,
-    population: populationValidation 
+    population: populationValidation ,
+    systemId: z.number().int()
 });
 
 const planetSchema = {

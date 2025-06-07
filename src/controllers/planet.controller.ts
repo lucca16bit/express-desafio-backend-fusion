@@ -2,10 +2,12 @@ import { AuthenticatedRequest } from '@interfaces/auth.request.interface';
 import Send from '@utils/response.utils';
 import { prisma } from 'db';
 import { Request, Response } from 'express';
+import planetSchema from 'validations/planet.schema';
+import { z } from 'zod';
 
 class PlanetController {
     static create = async (req: Request, res: Response) => {
-        const {name, climate, terrain, population, systemId} = req.body;
+        const {name, climate, terrain, population, systemId} = req.body as z.infer<typeof planetSchema.validateSchema>;
 
         try {
             const userId = (req as AuthenticatedRequest).userId;
@@ -16,10 +18,6 @@ class PlanetController {
                     userId
                 }
             });
-
-            if (!systemId) {
-                return Send.error(res, null, 'É necessário informar um sistema estelar');
-            }
 
             if (planetExists) {
                 return Send.error(res, null, 'O planeta já existe!');
@@ -111,6 +109,16 @@ class PlanetController {
         try {
             const planetId = Number(req.params.id);
 
+            const planetExists = await prisma.planet.findFirst({
+                where: {
+                    id: planetId
+                }
+            });
+
+            if (!planetExists) {
+                return Send.notFound(res, null, 'Planeta não encontrado');
+            };
+
             const planet = await prisma.planet.findUnique({
                 where: {
                     id: planetId
@@ -133,7 +141,7 @@ class PlanetController {
 
             if (!planet) {
                 return Send.notFound(res, null, 'Planeta não encontrado');
-            };
+            }
 
             const planetResponse = {
                 ...planet,
@@ -148,10 +156,20 @@ class PlanetController {
     };
 
     static update = async (req: Request, res: Response) => {
-        const {name, climate, terrain, population, systemId} = req.body;
+        const {name, climate, terrain, population, systemId} = req.body as z.infer<typeof planetSchema.validateSchema>;
         
         try {
             const planetId = Number(req.params.id);
+
+            const planetExists = await prisma.planet.findFirst({
+                where: {
+                    id: planetId
+                }
+            });
+
+            if (!planetExists) {
+                return Send.notFound(res, null, 'Planeta não encontrado');
+            };
 
             const planet = await prisma.planet.update({
                 where: {
@@ -180,10 +198,6 @@ class PlanetController {
                 }
             });
 
-            if (!planet) {
-                return Send.notFound(res, null, 'Planeta não encontrado');
-            };
-
             const planetResponse = {
                 ...planet,
                 population: planet.population ? planet.population.toString() : null
@@ -200,15 +214,21 @@ class PlanetController {
         try {
             const planetId = Number(req.params.id);
 
-            const planet = await prisma.planet.delete({
+            const planetExists = await prisma.planet.findFirst({
                 where: {
                     id: planetId
                 }
             });
 
-            if (!planet) {
+            if (!planetExists) {
                 return Send.notFound(res, null, 'Planeta não encontrado');
             };
+
+            const planet = await prisma.planet.delete({
+                where: {
+                    id: planetId
+                }
+            });
 
             return Send.success(res, null, 'Planeta deletado com sucesso');
         } catch (error) {
