@@ -1,8 +1,10 @@
 import router from '@routes/router';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import specs from 'docs/swagger.docs';
 import express from 'express';
 import morgan from 'morgan';
+import swaggerUi from 'swagger-ui-express';
 
 const app = express();
 
@@ -20,6 +22,9 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
+// documentação
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use(router);
 
