@@ -20,6 +20,27 @@ enum affiliation {
   RESISTANCE
 }
 
+enum race {
+  HUMAN
+  WOOKIEE
+  TWILEK
+  RODIAN
+  ZABRAK
+  TOGRUTA
+  CHISS
+  NAUTOLAN
+  MIRIALAN
+  MON_CALAMARI
+  TRANDOSHAN
+  DROID
+  EWOK
+  HUTT
+  TUSKENS
+  KAMINOAN
+  YODA
+  DATHOMIRIAN
+}
+
 model user {
   id          Int         @id @default(autoincrement())
   name        String      @unique(map: "User_name_key") @db.VarChar(100)
@@ -29,6 +50,8 @@ model user {
   createdAt   DateTime    @default(now())
   planets     planet[]
   starSystems starSystem[]
+  characters  characters[]
+  spaceships  spaceShips[]
 }
 
 model planet {
@@ -39,6 +62,7 @@ model planet {
   population  BigInt?
   systemId    Int
   userId      Int
+  characters  characters[]
   starSystem  starSystem  @relation(fields: [systemId], references: [id], onDelete: Cascade)
   user        user        @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -50,4 +74,27 @@ model starSystem {
   planets     planet[]
   userId      Int
   user        user        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model characters {
+  id            Int         @id @default(autoincrement())
+  name          String      @unique(map: "Character_name_key") @db.VarChar(100)
+  race          race        @default(HUMAN)
+  affiliation   affiliation @default(NEUTRAL)
+  spaceships    spaceShips[]
+  homePlanetId  Int?
+  userId        Int
+  homePlanet    planet?     @relation(fields: [homePlanetId], references: [id],  onDelete: SetNull)
+  user          user        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model spaceShips {
+  id                Int         @id @default(autoincrement())
+  name              String      @unique(map: "SpaceShips_name_key") @db.VarChar(100)
+  model             String      @db.VarChar(100)
+  manufacturer      String      @db.VarChar(50)
+  passengerCapacity Int
+  pilots            characters[]
+  userId            Int
+  user              user        @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

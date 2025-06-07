@@ -90,7 +90,7 @@ class PlanetController {
             });
 
             if (!planets) {
-                return Send.notFound(res, null, 'Nenhum planeta não encontrado');
+                return Send.notFound(res, null, 'Nenhum planeta foi encontrado');
             };
 
             // parsear do bigint para string para a serialização do json
